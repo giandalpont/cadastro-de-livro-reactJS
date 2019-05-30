@@ -1,20 +1,29 @@
 import React, { Component } from 'react'
-
+import $ from 'jquery'
 import Menu from './componentes/Menu'
 import './css/pure-min.css'
 import './css/side-menu.css'
 
 class  App extends Component {
 
-    constructor(){
+    constructor(porps){
         super()
         this.state = {
-            list : [{ 
-                name: 'Gian',
-                email: 'giandalpont@gmail.com',
-                password: '123'
-            }]
+            list: []
         }
+    }
+
+    componentWillMount(){
+        $.ajax({
+            // url: 'http://localhost:8080/api/autores',
+            url: 'http://cdc-react.herokuapp.com/api/autores',
+            dataType: 'json',
+            limit: 6,
+            success: function(resposta){
+                console.log(resposta)
+                this.setState( {list:resposta} )
+            }.bind(this)
+        })
     }
 
     render(){
@@ -61,8 +70,8 @@ class  App extends Component {
                                 <tbody>
                                     { this.state.list.map((item)=>{
                                         return(
-                                            <tr>
-                                                <td>{item.name}</td>
+                                            <tr key={item.id}>
+                                                <td>{item.nome}</td>
                                                 <td>{item.email}</td>
                                             </tr>
                                         )
