@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import $ from 'jquery'
 import PubSub from 'pubsub-js'
 import InputCustomizado from './componentes/InputCunstomizado'
+import TratadorErros from './TratadorErros' 
 
 class FormularioAutor extends Component {
 
@@ -27,14 +28,23 @@ class FormularioAutor extends Component {
             dataType: 'json',
             type: 'post',
             data: JSON.stringify({nome:this.state.nome,email:this.state.email,senha:this.state.senha}),
-            success: (send)=>{
+            success: function(send){
                 // Disparar um aviso geral de toggleNew disponivel
                 PubSub.publish('update-list-author', send)
                 //this.props.callbackToggle(send)
-                console.log('Enviado com sucesso')
-            },
+                this.setState({nome:'',email:'',senha:''})
+                // console.log('Enviado com sucesso')
+            }.bind(this),
             error: (send)=>{
+                if(send.status == 400){
+                    // Recuperar quais foram os erros
+                    // Exibir a mensagem de error no campo 
+                    new TratadorErros().publicaErros( send.responseJSON ) 
+                }
                 console.log('Error')
+            },
+            beforeSend: ()=>{
+                PubSub.publish('limpa-erros',{})
             }
         })
 
@@ -56,7 +66,7 @@ class FormularioAutor extends Component {
             <div className="pure-form pure-form-aligned">
                 <form className="pure-form pure-form-aligned" onSubmit={this.sendForm} method="post">
 
-                    <InputCustomizado  id ="nome" type="text" name="nome" label="Nome"  value={this.state.name} onChange={this.setNome} />
+                    <InputCustomizado  id ="nome" type="text" name="nome" label="Nome"  value={this.state.nome} onChange={this.setNome} />
                     <InputCustomizado  id ="email" type="email" name="email" label="E-mail"  value={this.state.email} onChange={this.setEmail} />
                     <InputCustomizado  id ="senha" type="password" name="senha" label="Senha"  value={this.state.senha} onChange={this.setSenha} />
                 
