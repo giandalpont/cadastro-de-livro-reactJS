@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
 import Menu from './componentes/Menu'
+import InputCustomizado from './componentes/InputCunstomizado'
+
 import './css/pure-min.css'
 import './css/side-menu.css'
 
@@ -80,18 +82,11 @@ class  App extends Component {
                         <h2 className="content-subhead">Author Registration</h2>
                         <div className="pure-form pure-form-aligned">
                             <form className="pure-form pure-form-aligned" onSubmit={this.sendForm} method="post">
-                                <div className="pure-control-group">
-                                    <label htmlFor="nome">Name</label> 
-                                    <input id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} />                  
-                                </div>
-                                <div className="pure-control-group">
-                                    <label htmlFor="email">E-mail</label> 
-                                    <input id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} />                  
-                                </div>
-                                <div className="pure-control-group">
-                                    <label htmlFor="senha">Password</label> 
-                                    <input id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha} />                                      
-                                </div>
+
+                                <InputCustomizado  id ="nome" type="text" name="nome" label="Nome"  value={this.state.name} onChange={this.setNome} />
+                                <InputCustomizado  id ="email" type="email" name="email" label="E-mail"  value={this.state.email} onChange={this.setEmail} />
+                                <InputCustomizado  id ="senha" type="password" name="senha" label="Senha"  value={this.state.senha} onChange={this.setSenha} />
+                               
                                 <div className="pure-control-group">                                  
                                     <label></label> 
                                     <button type="submit" className="pure-button pure-button-primary">Save</button>                                    
