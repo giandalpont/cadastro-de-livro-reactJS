@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import $ from 'jquery'
+import PubSub from 'pubsub-js'
 import InputCustomizado from './componentes/InputCunstomizado'
 
 class FormularioAutor extends Component {
@@ -27,8 +28,9 @@ class FormularioAutor extends Component {
             type: 'post',
             data: JSON.stringify({nome:this.state.nome,email:this.state.email,senha:this.state.senha}),
             success: (send)=>{
-                // this.setState({ list: send }) // Atualizando a lista
-                this.props.callbackToggle(send)
+                // Disparar um aviso geral de toggleNew disponivel
+                PubSub.publish('update-list-author', send)
+                //this.props.callbackToggle(send)
                 console.log('Enviado com sucesso')
             },
             error: (send)=>{
@@ -106,7 +108,6 @@ class Autorbox extends Component {
         this.state = {
             list: [],
         }
-        this.toggleForm = this.toggleForm.bind(this)
     }
 
     componentWillMount(){
@@ -120,16 +121,17 @@ class Autorbox extends Component {
                 this.setState( {list:resposta} )
             }.bind(this)
         })
-    }
 
-    toggleForm(toggleNew){
-        this.setState({ list:toggleNew })
+        PubSub.subscribe('update-list-author', function(newTop, send){
+            this.setState({ list:send })
+        }.bind(this))
+
     }
 
     render (){
         return(
             <Fragment>
-                <FormularioAutor callbackToggle={this.toggleForm} />
+                <FormularioAutor />
                 <TabelaAutores list={this.state.list} />
             </Fragment>
         )
