@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import $ from 'jquery'
 import InputCustomizado from './componentes/InputCunstomizado'
 
-export class FormularioAutor extends Component {
+class FormularioAutor extends Component {
 
     constructor(porps){
         super()
         this.state = {
-            list: [],
             nome: '',
             email: '',
             senha: '',
@@ -28,7 +27,8 @@ export class FormularioAutor extends Component {
             type: 'post',
             data: JSON.stringify({nome:this.state.nome,email:this.state.email,senha:this.state.senha}),
             success: (send)=>{
-                this.setState({ list: send }) // Atualizando a lista
+                // this.setState({ list: send }) // Atualizando a lista
+                this.props.callbackToggle(send)
                 console.log('Enviado com sucesso')
             },
             error: (send)=>{
@@ -70,13 +70,43 @@ export class FormularioAutor extends Component {
 
 }
 
-export class TabelaAutores extends Component {
+class TabelaAutores extends Component {
 
-    constructor(){
+    render (){
+        return (
+            <div>            
+                <table className="pure-table">
+                    <thead>
+                        <tr>
+                        <th>Name</th>
+                        <th>E-mail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { this.props.list.map((item)=>{
+                            return(
+                                <tr key={item.id}>
+                                    <td>{item.nome}</td>
+                                    <td>{item.email}</td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table> 
+            </div> 
+        )
+    }
+
+}
+
+class Autorbox extends Component {
+
+    constructor(props){
         super()
         this.state = {
             list: [],
         }
+        this.toggleForm = this.toggleForm.bind(this)
     }
 
     componentWillMount(){
@@ -92,29 +122,19 @@ export class TabelaAutores extends Component {
         })
     }
 
+    toggleForm(toggleNew){
+        this.setState({ list:toggleNew })
+    }
+
     render (){
-        return (
-            <div>            
-                <table className="pure-table">
-                    <thead>
-                        <tr>
-                        <th>Name</th>
-                        <th>E-mail</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { this.state.list.map((item)=>{
-                            return(
-                                <tr key={item.id}>
-                                    <td>{item.nome}</td>
-                                    <td>{item.email}</td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table> 
-            </div> 
+        return(
+            <Fragment>
+                <FormularioAutor callbackToggle={this.toggleForm} />
+                <TabelaAutores list={this.state.list} />
+            </Fragment>
         )
     }
 
 }
+
+export default Autorbox

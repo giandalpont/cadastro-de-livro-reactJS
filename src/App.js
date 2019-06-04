@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import Menu from './componentes/Menu'
 
-import { FormularioAutor, TabelaAutores } from './Autor';
+import Autorbox from './Autor';
 
 import './css/pure-min.css'
 import './css/side-menu.css'
@@ -24,9 +24,8 @@ class  App extends Component {
                     <div className="content" id="content">
                         <h2 className="content-subhead">Author Registration</h2>
 
-                        <FormularioAutor />
+                        <Autorbox />
 
-                        <TabelaAutores />
                                     
                     </div>
                 </div>
